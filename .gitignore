@@ -1,2 +1,7 @@
-__pycache__/
-Account.py
+py/__pycache__/
+py/Account.py
+cpp/a.out
+.vscode/
+
+
+
