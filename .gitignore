@@ -1,5 +1,5 @@
-__pycache__/
-Account.py
-a.out
+py/__pycache__/
+py/Account.py
+cpp/a.out
 .vscode/
 .gitignore.*
