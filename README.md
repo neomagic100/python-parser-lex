@@ -45,7 +45,7 @@ This will analyze the `myfile.py` file and generate an output file named `blocks
 
 ## License
 
-This project is licensed under theGNU GENERAL PUBLIC LICENSE - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the GNU GENERAL PUBLIC LICENSE - see the [LICENSE](LICENSE) file for details.
 
 ```
 This README provides an overview of the script, installation instructions, usage examples, features, and licensing information. Adjustments can be made according to your preferences or additional details you want to include.
