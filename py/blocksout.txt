@@ -1,0 +1,271 @@
+Block 0:
+Parent: None
+Children: [None]
+Siblings: None
+class Position:
+	QUANTITY = "Quantity"
+	AMOUNT   = "Amount"
+
+Block 1:
+Parent: None
+Children: [2, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]
+Siblings: None
+class Account:
+	def __init__(self):
+		self.cashCore = 0 
+		self.availableCash = 0
+		self.recordedCashBalance = []
+		self.interest = 0
+		self.entries = []
+		self.rawEntries = []
+		self.log = []
+		self.marginBalance = 0
+		self.total = 0
+		self.positions = {}
+		self.totalDeposited = 0
+		self.totalBought = 0
+		self.totalSold = 0
+		self.depositEntries = []
+		self.buyEntries = []
+		self.sellEntries = []
+
+Block 2:
+Parent: 1
+Children: [3, 5, 7, 8, 9]
+Siblings: None
+	def addEntry(self, entry):        
+		self.entries.append(entry)
+		action = entry.action
+		action = action.upper()
+		prevPos = None if not entry.symbol in self.positions.keys() else self.positions[entry.symbol]
+		if entry.isDeposit():
+			self.recordedCashBalance = entry.cash_balance
+			self.transact(entry.amount)
+			self.total += entry.amount
+			self.addDeposit(entry.amount)
+			self.addLog(f"Deposited {entry.amount}, Cash Balance {self.cashCore}, Total {self.total}")
+			self.depositEntries.append(entry.rawRow)
+
+Block 3:
+Parent: 2
+Children: [4]
+Siblings: None
+		elif entry.isBuy():
+			self.transact(entry.amount)
+			self.addToTotalBought(entry.amount)
+			self.buyEntries.append(entry.rawRow)
+			if entry.isMargin():
+				self.marginTransact(entry.amount)
+				self.addLog(f"Bought (Margin) {entry.amount}, Cash Balance {self.cashCore}, Total {self.total}, Margin Balance {self.marginBalance}")
+
+Block 4:
+Parent: 3
+Children: [None]
+Siblings: None
+			else:
+				self.addLog(f"Bought {entry.amount}, Cash Balance {self.cashCore}, Total {self.total}")
+
+Block 5:
+Parent: 2
+Children: [6]
+Siblings: None
+		elif entry.isSell():
+			self.transact(entry.amount)
+			self.addToTotalSold(entry.amount)
+			self.sellEntries.append(entry.rawRow)
+			if entry.isMargin():
+				self.marginTransact(entry.amount)
+				self.addLog(f"Sold (Margin) {entry.amount}, Cash Balance {self.cashCore}, Total {self.total}, Margin Balance {self.marginBalance}")
+
+Block 6:
+Parent: 5
+Children: [None]
+Siblings: None
+			self.addLog(f"Sold {entry.amount}, Cash Balance {self.cashCore}, Total {self.total}")
+
+Block 7:
+Parent: 2
+Children: [None]
+Siblings: None
+		elif entry.isRedeem():
+			self.transact(entry.amount, absolute=True)
+			self.addToTotalSold(entry.amount)
+			self.sellEntries.append(entry.rawRow)
+			self.addLog(f"Redeemed {entry.amount}, Cash Balance {self.cashCore}, Total {self.total}")
+
+Block 8:
+Parent: 2
+Children: [None]
+Siblings: None
+		else:
+			self.addLog(None)
+
+Block 9:
+Parent: 2
+Children: [None]
+Siblings: None
+		self.modifyPosition(entry, prevPos)
+
+Block 10:
+Parent: 1
+Children: [11]
+Siblings: None
+	def transact(self, amount, absolute = False):
+		if absolute:
+			self.cashCore += abs(amount)
+
+Block 11:
+Parent: 10
+Children: [None]
+Siblings: None
+		else:
+			self.cashCore += amount
+
+Block 12:
+Parent: 1
+Children: [None]
+Siblings: None
+	def marginTransact(self, amount):
+		self.marginBalance += amount
+
+Block 13:
+Parent: 1
+Children: [None]
+Siblings: None
+	def addLog(self, logEnt):
+		self.log.append(logEnt)
+
+Block 14:
+Parent: 1
+Children: [None]
+Siblings: None
+	def addRawEntry(self, entry):
+		self.rawEntries.append(entry)
+
+Block 15:
+Parent: 1
+Children: [None]
+Siblings: None
+	def addDeposit(self, amount):
+		self.totalDeposited += amount
+
+Block 16:
+Parent: 1
+Children: [None]
+Siblings: None
+	def addToTotalBought(self, amount):
+		self.totalBought += abs(amount)
+
+Block 17:
+Parent: 1
+Children: [None]
+Siblings: None
+	def addToTotalSold(self, amount):
+		self.totalSold -= abs(amount)
+
+Block 18:
+Parent: 1
+Children: [None]
+Siblings: None
+	def showRawData(self):
+		print(f"Total Deposited: ${self.totalDeposited}")
+		print(f"Total Bought   : ${self.totalBought}")
+		print(f"Total Sold     : ${self.totalSold}")
+
+Block 19:
+Parent: 1
+Children: [None]
+Siblings: None
+	def showRawBuys(self):
+		print("Buys:")
+		for row in self.buyEntries:
+			print(row)
+
+Block 20:
+Parent: 1
+Children: [None]
+Siblings: None
+	def showRawSells(self):
+		print("Sells:")
+		for row in self.sellEntries:
+			print(row)
+
+Block 21:
+Parent: 1
+Children: [None]
+Siblings: None
+	def showRawDeposits(self):
+		print("Deposits")
+		for row in self.depositEntries:
+			print(row)
+
+Block 22:
+Parent: 1
+Children: [23, 24, 27]
+Siblings: None
+	def modifyPosition(self, entry, prevPos):
+		if not entry.isTrade():
+			return
+
+Block 23:
+Parent: 22
+Children: [None]
+Siblings: None
+		if entry.isShort():
+			return
+
+Block 24:
+Parent: 22
+Children: [25, 26]
+Siblings: None
+		quan = abs(entry.quantity)
+		amt  = abs(entry.quantity * entry.price)
+		symbol  = entry.symbol
+		Q = Position.QUANTITY
+		A = Position.AMOUNT
+		if symbol in self.positions.keys():
+			if entry.isBuy() or entry.isCoverBuy():
+				self.positions[symbol][Q] += quan
+				self.positions[symbol][A] += amt
+
+Block 25:
+Parent: 24
+Children: [None]
+Siblings: None
+			elif entry.isSell() or entry.isRedeem() or entry.isShortSell():
+				self.positions[symbol][Q] -= quan
+				self.positions[symbol][A] -= amt 
+
+Block 26:
+Parent: 24
+Children: [None]
+Siblings: None
+			if entry.symbol == "VRT":
+				print("VRT") 
+				print(f"{self.positions['VRT']}")
+				print(f"{entry.rawRow}")
+
+Block 27:
+Parent: 22
+Children: [28, 29]
+Siblings: None
+		else:
+			if entry.isBuy():
+				self.positions[symbol] = {Position.QUANTITY: quan, Position.AMOUNT: amt}
+
+Block 28:
+Parent: 27
+Children: [None]
+Siblings: None
+			elif entry.isSell() or entry.isRedeem():
+				self.positions[symbol] = {Position.QUANTITY: -quan, Position.AMOUNT: -amt}
+
+Block 29:
+Parent: 27
+Children: [30]
+Siblings: None
+			if entry.symbol == "VRT":
+				vrt = "VRT"
+				print(vrt) 
+				print(f"{self.positions[vrt]}")
+
