@@ -19,7 +19,7 @@ class CodeBlock {
     std::ofstream fileStream;
 
     public:
-    CodeBlock(std::vector<CodeLine> codeLines, long unsigned int id);
+    CodeBlock(std::vector<std::string> codeLines, long unsigned int id);
     ~CodeBlock() = default;
     
     unsigned int getHighestOrder();
@@ -39,11 +39,13 @@ class CodeBlock {
 
     unsigned int getSize();
 
+    void assignParent(std::vector<CodeBlock>& blocks);
     static std::vector<CodeLine> createCodeLines(const std::vector<std::string>& text);
-    static void assignParent(const CodeBlock& blocks, CodeBlock& newBlock);
+    // static void assignParent(std::vector<CodeBlock>& blocks, CodeBlock& newBlock);
     static std::vector<long unsigned int> getSiblingIds(const std::vector<CodeBlock>& blocks, const CodeBlock& newBlock);
+    long unsigned int getBlockID();
 
-    friend bool operator==(const CodeBlock& self, const CodeBlock& other);
+    // friend bool operator==(const CodeBlock& self, const CodeBlock& other);
     friend bool operator!=(const CodeBlock& self, const CodeBlock& other);
     friend bool operator>(const CodeBlock& self, const CodeBlock& other);
     friend bool operator<(const CodeBlock& self, const CodeBlock& other);

@@ -1,5 +1,6 @@
 py/__pycache__/
 py/Account.py
 cpp/a.out
+a.out
 .vscode/
 .gitignore.*

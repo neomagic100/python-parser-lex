@@ -61,6 +61,11 @@ bool CodeLine::endsWith(const char searchChar, const std::string& text)
     return lastChar == searchChar;
 }
 
+unsigned int CodeLine::getTabsCount()
+{
+    return this->tabsCount;
+}
+
 std::string CodeLine::getTextNoTabs()
 {
     return this->textNoTabs;

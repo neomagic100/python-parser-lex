@@ -21,6 +21,7 @@ class CodeLine
     std::string getString();
     std::string toPyString();
     std::string getTextNoTabs();
+    unsigned int getTabsCount();
 
     static bool startsWith(const std::string searchToken, const std::string& text);
     static bool endsWith(const char searchChar, const std::string& text);

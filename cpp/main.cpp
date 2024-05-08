@@ -40,11 +40,14 @@ int main(int argc, char *argv[])
 
     std::vector<CodeLine> codeLines = CodeBlock::createCodeLines(lines);
 
-    for (CodeLine cl: codeLines)
-    {
-        std::cout << cl.getString() << std::endl;
-    }
+    // for (CodeLine cl: codeLines)
+    // {
+    //     std::cout << cl.getString() << std::endl;
+    // }
 
+    CodeBlock block{lines, 0};
 
+    std::cout << block.toPyText() << std::endl;
+    std::cout << block.hasParent() << std::endl;
    
 }
